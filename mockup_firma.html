@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup App Consentimiento</title>
+
+<style>
+body {
+    background: #e9eef3;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.phone {
+    width: 360px;
+    height: 720px;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.status-bar {
+    width: 100%;
+	padding:10px 100px 0px 120px;
+	align:center;
+    background: #0f3d73;
+}
+
+.header {
+    background: #0f3d73;
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.content {
+    padding: 20px;
+    height: calc(100% - 110px);
+    overflow-y: auto;
+}
+
+.card {
+    background: #f4f6f9;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.button {
+    background: #0f3d73;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.progress {
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 50%;
+    background: #2ecc71;
+}
+
+.user-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.signed { color: #2ecc71; font-weight: bold; }
+.pending { color: #f39c12; font-weight: bold; }
+
+.nav {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav button {
+    padding: 5px 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+    <div class="status-bar"> <img src="logo.png"  style="width:100px;height:50px;"> </div>
+	
+	
+    <div class="header" id="screen-title">
+		
+	Gestió de consentiments</div>
+
+    <div class="content" id="screen-content">
+	
+        <!-- CONTENIDO DINÁMICO -->
+    </div>
+
+    <div class="nav">
+	
+        <button onclick="loadDashboard()" class="button" >Inici</button>
+        <!--
+		<button onclick="loadDocuments()">Consentiments</button>
+        <button onclick="loadDetail()">Detall</button>
+        <button onclick="loadSign()">Signatura</button>
+        <button onclick="loadSuccess()">OK</button>
+		-->
+    </div>
+
+</div>
+
+<script>
+
+function loadDashboard() {
+    document.getElementById("screen-title").innerText = "Gestió de consentiments";
+    document.getElementById("screen-content").innerHTML = `
+        <h3>Hola, Nom i cognom</h3>
+        <div class="card">
+            <p>Signats: <strong>2</strong></p>
+            <p>Pendents: <strong>1</strong></p>
+        </div>
+        <div class="button" onclick="loadDocuments()">Llistat de consentiments</div>
+    `;
+}
+
+function loadDocuments() {
+    document.getElementById("screen-title").innerText = "Els meus documents";
+    document.getElementById("screen-content").innerHTML = `
+        <div class="card">
+            <strong>Inscripció de naixement</strong>
+            <p>1 de 2 signatures</p>
+            <div class="progress">
+                <div class="progress-bar"></div>
+            </div>
+			<div class="button" onclick="loadDetail()">Veure detall</div>
+        </div>
+
+        <div class="card">
+            <strong>Avís d'ajuts escolars</strong>
+            <p> 2 de 2 signants</p>
+            <div class="progress">
+                <div class="progress-bar" style="width:100%"></div>
+            </div>
+        </div>
+		<div class="card">
+            <strong>Ajuts de l'ajuntament per familia nombrosa</strong>
+            <p> 1 de 1 signants</p>
+            <div class="progress">
+                <div class="progress-bar" style="width:100%"></div>
+            </div>
+        </div>
+    `;
+}
+
+function loadDetail() {
+    document.getElementById("screen-title").innerText = "Detall Document";
+    document.getElementById("screen-content").innerHTML = `
+        <h3>Inscripció de naixement</h3>
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+
+        <div class="user-row">
+            <span>Progenitor gestant</span>
+            <span class="signed">Signat</span>
+        </div>
+
+        <div class="user-row">
+            <span>Progenitor no gestant</span>
+            <span class="pending">Pendent de signatura</span>
+        </div>
+       
+
+        <div class="button" onclick="loadSign()">Reenviar SMS</div>
+    `;
+}
+
+function loadSign() {
+    document.getElementById("screen-title").innerText = "Revisió i Signatura";
+    document.getElementById("screen-content").innerHTML = `
+        <p>Trobareu tota la informació en l'enllaç: <a href="null"> Consentiment de la inscripció de naixement</a> </p>
+        <input type="checkbox" id="terms"> Accepto<br>
+        <input type="text" placeholder="Codi SMS" style="width:100%; margin-top:10px; padding:8px;">
+        <div class="button" onclick="loadSuccess()">Signar</div>
+    `;
+}
+
+function loadSuccess() {
+    document.getElementById("screen-title").innerText = "Consentiment signat";
+    document.getElementById("screen-content").innerHTML = `
+        <h2 style="color:#2ecc71;">✔ Signatura completada</h2>
+        <p>Data: 23/01/2026 13:05</p>
+        <p>Codi de verificació: 827156</p>
+        <div class="button">Obtenir una copia</div>
+    `;
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>

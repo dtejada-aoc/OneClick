@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguiment de Tràmits</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef2f7;
+  display: flex;
+  justify-content: center;
+}
+
+.phone {
+  width: 360px;
+  height: 720px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+header {
+  background: #003366;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.screen {
+  padding: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.small {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  color: white;
+}
+
+.ok { background: #2e7d32; }
+.progress { background: #005ea5; }
+.pending { background: #6b7280; }
+
+/* Barra de progreso */
+.progress-bar {
+  margin-top: 10px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.status-bar {
+    width: 100%;
+	padding:10px 100px 0px 120px;
+	align:center;
+    background: #003366;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #005ea5;
+  width: 60%;
+}
+
+/* Timeline */
+.timeline {
+  margin-top: 20px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-top: 4px;
+}
+
+.done { background: #2e7d32; }
+.current { background: #005ea5; }
+.pending { background: #cbd5e1; }
+
+.line {
+  width: 2px;
+  height: 25px;
+  background: #cbd5e1;
+  margin-left: 6px;
+}
+
+.link {
+  margin-top: 10px;
+  display: inline-block;
+  color: #005ea5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background: #003366;
+  color: white;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 20px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+ <div class="status-bar"> <img src="logo.png"  style="width:100px;height:50px;"> </div>
+
+<header id="header">Els meus tràmits</header>
+
+<!-- LISTADO -->
+<div id="list" class="screen">
+
+<p> Hola Nom i Cognoms </p>
+
+  <div class="card" onclick="openDetail()">
+    <div class="title">Alta naixement</div>
+	<div class="small">Expedient: EXP-2026-000123</div>
+
+    <div class="small">Inici: 12/01/2026</div>
+    <div class="small">Última actualizació: 02/02/2026</div>
+    <div class="small">Estat actual: Pendent TGSS</div>
+
+    <span class="badge progress">En curs</span>
+
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+
+    <div class="small">3 de 5 fases completadas</div>
+  </div>
+
+</div>
+
+<!-- DETALLE -->
+<div id="detail" class="screen hidden">
+
+  <div class="title">Alta naixement</div>
+  <div class="small">Estat actual</div>
+  <span class="badge progress">Pendent TGSS</span>
+
+  <div class="timeline">
+
+    <div class="step">
+      <div class="circle done"></div>
+      <div>
+        Registre civil
+		<div class="small">Finalitzat: 13/01/2026</div>
+        <div class="small">Completat</div>
+      </div>
+    </div>
+    <div class="line"></div>
+
+    <div class="step">
+      <div class="circle done"></div>
+      <div>
+        Empadronament
+		<div class="small">Finalitzat: 18/01/2026</div>
+        <div class="small">Completat</div>
+      </div>
+    </div>
+    <div class="line"></div>
+
+    <div class="step">
+      <div class="circle current"></div>
+      <div>
+        Alta Seguretat Social (TGSS)
+		<div class="small">En procés desde: 20/01/2026</div>
+        <div class="small">En curs</div>
+      </div>
+    </div>
+    <div class="line"></div>
+
+    <div class="step">
+      <div class="circle pending"></div>
+      <div>
+        Emisió documents
+        <div class="small">Pendent</div>
+      </div>
+    </div>
+    <div class="line"></div>
+
+    <div class="step">
+      <div class="circle pending"></div>
+      <div>
+        Ajuts i subvencions
+        <div class="small">Pendent</div>
+      </div>
+    </div>
+
+  </div>
+ <!-- NUEVO -->
+  <div class="link" onclick="openDocs()">📂 Veure documents disponibles </div>
+  <button onclick="goBack()">Tornar enrere</button>
+
+</div>
+
+
+<!-- DOCUMENTOS -->
+<div id="docs" class="screen hidden">
+
+  <div class="card">
+    <div class="doc-header">
+      <div>
+        <div class="title">Padró de convivients</div>
+        <div class="small">Disponible</div>
+      </div>
+      <button class="btn btn-view">Obtenir</button>
+    </div>
+  </div>
+  <br>
+
+  <div class="card">
+    <div class="doc-header">
+      <div>
+        <div class="title">Alta TGSS</div>
+        <div class="small">No disponible</div>
+      </div>
+      <button class="btn btn-disabled">No disponible</button>
+    </div>
+  </div>
+<br>
+  <div class="card">
+    <div class="doc-header">
+      <div>
+        <div class="title">Títol de Familia Nombrosa</div>
+        <div class="small">No disponible</div>
+      </div>
+      <button class="btn btn-disabled">No disponible</button>
+    </div>
+  </div>
+
+  <button onclick="backToDetail()">Tornar enrere</button>
+
+</div>
+
+
+</div>
+
+<script>
+function openDetail() {
+  document.getElementById("list").classList.add("hidden");
+  document.getElementById("detail").classList.remove("hidden");
+  document.getElementById("header").innerText = "Detall de la tramitació";
+}
+
+function goBack() {
+  document.getElementById("detail").classList.add("hidden");
+  document.getElementById("list").classList.remove("hidden");
+  document.getElementById("header").innerText = "El meus tràmits";
+}
+
+function openDocs() {
+  hideAll();
+  document.getElementById("docs").classList.remove("hidden");
+  document.getElementById("header").innerText = "Documents";
+}
+
+
+function backToDetail() {
+  hideAll();
+  document.getElementById("detail").classList.remove("hidden");
+  document.getElementById("header").innerText = "Detall de la tramitació";
+}
+
+function hideAll() {
+  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+}
+</script>
+
+</body>
+</html>
