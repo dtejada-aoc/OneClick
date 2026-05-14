@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>questionari-enquesta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --card: #ffffff;
+      --text: #121212;
+      --muted: #585858;
+      --line: #d8d8d8;
+      --primary: #0f5fb8;
+      --primary-hover: #0b4d96;
+      --chip: #eef2f6;
+      --shadow: 0 2px 10px rgba(0,0,0,.05);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 22px 18px 40px;
+      display: grid;
+      place-items: start center;
+    }
+
+    .survey { width: min(100%, 440px); }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .progress span {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15,95,184,.18);
+      transition: background .2s ease;
+    }
+
+    .progress span.active { background: var(--primary); }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 20px 18px;
+      min-height: 320px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .card.active { display: flex; }
+
+    .step-label {
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 19px;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      
+    }
+
+    p {
+      margin: 0 0 18px;
+      font-size: 14px;
+      line-height: 1.38;
+      color: var(--text);
+      
+    }
+
+    fieldset {
+      border: 0;
+      padding: 0;
+      margin: 0 0 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .radio-row,
+    .scale-item,
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .radio-row input,
+    .scale-item input,
+    .check-row input {
+      margin: 2px 0 0;
+      accent-color: #7e7e7e;
+      flex: 0 0 auto;
+    }
+
+    .radio-row input,
+    .check-row input { width: 15px; height: 15px; }
+    .scale-item input { width: 14px; height: 14px; margin-left: auto; }
+
+    .scale-copy {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .badge {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--chip);
+      display: inline-grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #24313f;
+      flex: 0 0 auto;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      font: inherit;
+      resize: vertical;
+      background: #fafafa;
+    }
+
+    textarea:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .nav {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      height: 36px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,.12);
+      flex: 1;
+    }
+
+    .btn.primary:hover { background: var(--primary-hover); }
+
+    .btn.secondary {
+      background: white;
+      color: var(--text);
+      border-color: var(--line);
+      min-width: 102px;
+    }
+
+    .btn.secondary:hover { background: #f8f8f8; }
+
+    .summary {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+      font-size: 13px;
+      max-height: 210px;
+      overflow: auto;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fafafa;
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 18px 14px 30px; }
+      .card { min-height: 300px; }
+      p, h2 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="survey">
+    <form id="surveyForm" novalidate>
+      <div class="progress" aria-label="Progrés del qüestionari de 9 passos">
+        <span class="active"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <section class="card active" data-step="0">
+        <div class="step-label">Pas 1 de 9</div>
+        <h2>Gràcies per dedicar-nos 2 minuts</h2>
+        <p>Aquest qüestionari ens ajuda a entendre millor l’experiència del procés administratiu del naixement.</p>
+        <div class="nav">
+          <button class="btn primary next" type="button">Començar <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="1">
+        <div class="step-label">Pas 2 de 9</div>
+        <h2>Facilitat i càrrega administrativa</h2>
+        <p>No hem necessitat fer tràmits ni aportar documentació addicional.</p>
+        <fieldset>
+          <label class="radio-row"><input type="radio" name="carrega" value="Sí"> Sí</label>
+          <label class="radio-row"><input type="radio" name="carrega" value="No"> No</label>
+        </fieldset>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="2">
+        <div class="step-label">Pas 3 de 9</div>
+        <h2>Entesa del procés</h2>
+        <p>He entès clarament com funciona el procés administratiu del naixement.</p>
+        <fieldset>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">1</span><span>1 – Gens d’acord</span></span><input type="radio" name="entesa" value="1 - Gens d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">2</span><span>2 – Poc d’acord</span></span><input type="radio" name="entesa" value="2 - Poc d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">3</span><span>3 – Bastant d’acord</span></span><input type="radio" name="entesa" value="3 - Bastant d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">4</span><span>4 – Molt d’acord</span></span><input type="radio" name="entesa" value="4 - Molt d'acord"></label>
+        </fieldset>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="3">
+        <div class="step-label">Pas 4 de 9</div>
+        <h2>Consentiment i informació rebuda a l’hospital</h2>
+        <p>La informació sobre el consentiment que vam signar va ser clara i entenedora.</p>
+        <fieldset>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">1</span><span>1 – Gens d’acord</span></span><input type="radio" name="consentiment" value="1 - Gens d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">2</span><span>2 – Poc d’acord</span></span><input type="radio" name="consentiment" value="2 - Poc d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">3</span><span>3 – Bastant d’acord</span></span><input type="radio" name="consentiment" value="3 - Bastant d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">4</span><span>4 – Molt d’acord</span></span><input type="radio" name="consentiment" value="4 - Molt d'acord"></label>
+        </fieldset>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="4">
+        <div class="step-label">Pas 5 de 9</div>
+        <h2>Canals de comunicació</h2>
+        <p>Quin canal us ha estat més útil per rebre informació?</p>
+        <fieldset>
+          <label class="radio-row"><input type="radio" name="canal" value="Carta"> Carta</label>
+          <label class="radio-row"><input type="radio" name="canal" value="Telèfon"> Telèfon</label>
+          <label class="radio-row"><input type="radio" name="canal" value="Correu electrònic"> Correu electrònic</label>
+          <label class="radio-row"><input type="radio" name="canal" value="Espai personal / portal"> Espai personal / portal</label>
+        </fieldset>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="5">
+        <div class="step-label">Pas 6 de 9</div>
+        <h2>Carta de benvinguda</h2>
+        <p>La carta de benvinguda ens ha ajudat a entendre quines gestions s’han fet.</p>
+        <fieldset>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">1</span><span>1 – Gens d’acord</span></span><input type="radio" name="carta" value="1 - Gens d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">2</span><span>2 – Poc d’acord</span></span><input type="radio" name="carta" value="2 - Poc d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">3</span><span>3 – Bastant d’acord</span></span><input type="radio" name="carta" value="3 - Bastant d'acord"></label>
+          <label class="scale-item"><span class="scale-copy"><span class="badge">4</span><span>4 – D’acord</span></span><input type="radio" name="carta" value="4 - D'acord"></label>
+        </fieldset>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="6">
+        <div class="step-label">Pas 7 de 9</div>
+        <h2>Valoració global del model proactiu</h2>
+        <p>Com valoreu, en general, el nou model proactiu del naixement?</p>
+        <fieldset>
+          <label class="radio-row"><input type="radio" name="valoracio" value="1 - Molt malament"> 1 – Molt malament</label>
+          <label class="radio-row"><input type="radio" name="valoracio" value="2"> 2</label>
+          <label class="radio-row"><input type="radio" name="valoracio" value="3"> 3</label>
+          <label class="radio-row"><input type="radio" name="valoracio" value="4"> 4</label>
+          <label class="radio-row"><input type="radio" name="valoracio" value="5 - Excel·lent"> 5 – Excel·lent</label>
+        </fieldset>
+        <p>Els enllaços i recursos de la carta us han estat útils.</p>
+        <fieldset>
+          <label class="radio-row"><input type="radio" name="recursos" value="Sí"> Sí</label>
+          <label class="radio-row"><input type="radio" name="recursos" value="Encara no els hem consultat"> Encara no els hem consultat</label>
+          <label class="radio-row"><input type="radio" name="recursos" value="No"> No</label>
+        </fieldset>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="7">
+        <div class="step-label">Pas 8 de 9</div>
+        <h2>Propostes i millores</h2>
+        <p>Què milloraríeu del procés?</p>
+        <textarea name="millores" placeholder="Escriu aquí els teus suggeriments..."></textarea>
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary next" type="button">Següent <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card" data-step="8">
+        <div class="step-label">Pas 9 de 9</div>
+        <h2>Comentaris addicionals</h2>
+        <p>Altres comentaris o suggeriments que vulgueu compartir? Aquest camp és opcional.</p>
+        <textarea name="comentaris" placeholder="Afegeix qualsevol comentari final..."></textarea>
+		<h2>Resum de les respostes</h2>
+        <div class="summary" aria-live="polite">
+          <div class="summary-item"><strong>Càrrega administrativa</strong><span data-summary="carrega">—</span></div>
+          <div class="summary-item"><strong>Entesa del procés</strong><span data-summary="entesa">—</span></div>
+          <div class="summary-item"><strong>Consentiment</strong><span data-summary="consentiment">—</span></div>
+          <div class="summary-item"><strong>Canal més útil</strong><span data-summary="canal">—</span></div>
+          <div class="summary-item"><strong>Carta de benvinguda</strong><span data-summary="carta">—</span></div>
+          <div class="summary-item"><strong>Valoració global</strong><span data-summary="valoracio">—</span></div>
+          <div class="summary-item"><strong>Recursos útils</strong><span data-summary="recursos">—</span></div>
+          <div class="summary-item"><strong>Propostes</strong><span data-summary="millores">—</span></div>
+          <div class="summary-item"><strong>Comentaris</strong><span data-summary="comentaris">—</span></div>
+        </div>
+
+        <div class="nav">
+          <button class="btn secondary prev" type="button">Anterior</button>
+          <button class="btn primary" type="submit">Enviar <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll('.card'));
+    const progress = Array.from(document.querySelectorAll('.progress span'));
+    const form = document.getElementById('surveyForm');
+    let currentStep = 0;
+
+    function getValue(name) {
+      const field = form.elements[name];
+      if (!field) return '—';
+      if (field instanceof RadioNodeList) return field.value || '—';
+      return field.value?.trim() || '—';
+    }
+
+    function updateSummary() {
+      document.querySelector('[data-summary="carrega"]').textContent = getValue('carrega');
+      document.querySelector('[data-summary="entesa"]').textContent = getValue('entesa');
+      document.querySelector('[data-summary="consentiment"]').textContent = getValue('consentiment');
+      document.querySelector('[data-summary="canal"]').textContent = getValue('canal');
+      document.querySelector('[data-summary="carta"]').textContent = getValue('carta');
+      document.querySelector('[data-summary="valoracio"]').textContent = getValue('valoracio');
+      document.querySelector('[data-summary="recursos"]').textContent = getValue('recursos');
+      document.querySelector('[data-summary="millores"]').textContent = getValue('millores');
+      document.querySelector('[data-summary="comentaris"]').textContent = getValue('comentaris');
+    }
+
+    function showStep(index) {
+      currentStep = index;
+      steps.forEach((step, i) => step.classList.toggle('active', i === index));
+      progress.forEach((dot, i) => dot.classList.toggle('active', i <= index));
+      updateSummary();
+    }
+
+    document.querySelectorAll('.next').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) showStep(currentStep + 1);
+      });
+    });
+
+    document.querySelectorAll('.prev').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (currentStep > 0) showStep(currentStep - 1);
+      });
+    });
+
+    form.addEventListener('input', updateSummary);
+    form.addEventListener('change', updateSummary);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Enquesta enviada.');
+    });
+  </script>
+</body>
+</html>
